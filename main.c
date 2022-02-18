@@ -6,20 +6,21 @@
 #include "SSD1306.h"
 
 
-void writeOLED(uint16_t adc) {
+void displayOLED(uint16_t adc) {
 	OLED_Clear();
 	OLED_SetCursor(0, 0);
-	char adcStr[16];
-	itoa(adc, adcStr, 10);
-	OLED_Printf(adcStr);
 	
 	//crtanje grafova 
 	if (adc < 45){
+		OLED_VerticalGraph(0, 0);
+	} else if(adc >= 45 && adc < 48){
 		OLED_VerticalGraph(0, 25);
-	} else if(adc >= 45 && adc < 50){
-		OLED_VerticalGraph(1, 50);
-	} else if(adc >= 50){
-		OLED_VerticalGraph(2, 75);
+	} else if(adc >= 48 && adc < 51){
+		OLED_VerticalGraph(0, 50);
+	} else if(adc >= 51 && adc < 53){
+		OLED_VerticalGraph(0, 75);
+	} else{
+		OLED_VerticalGraph(0, 100);
 		//aktiviranje buzzera
 		PORTA = ~_BV(1);
 		_delay_ms(1000);
@@ -27,22 +28,24 @@ void writeOLED(uint16_t adc) {
 	}
 }
 
+ISR(ADC_vect) {
+	displayOLED(ADC);
+}
+
 int main(void)
 {
-	DDRA = _BV(1); //postavljanje izlaznog pina za buzzer
+	//DDRA = _BV(1); //postavljanje izlaznog pina za buzzer
 	OLED_Init();
 
 	//tretiranje sound detectora kao obièan ADC
 	ADMUX = _BV(REFS0);
-	ADCSRA = _BV(ADEN) | _BV(ADPS2) | _BV(ADPS1);
+	ADCSRA = _BV(ADEN) | _BV(ADIE) | _BV(ADPS2) | _BV(ADPS1);
 
-	while (1) {
-		ADCSRA |= _BV(ADSC);
+	sei();
 
-		while (!(ADCSRA & _BV(ADIF)));
+	 while (1) {
+		 ADCSRA |= _BV(ADSC);
 
-		writeOLED(ADC);
-
-		_delay_ms(200);
-	}
+		 _delay_ms(200);
+	 }
 }
