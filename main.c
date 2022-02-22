@@ -24,6 +24,7 @@ void displayOLED(uint16_t adc) {
 		//aktiviranje buzzera
 		PORTA = ~_BV(1);
 		_delay_ms(1000);
+		//deaktivacija buzzera
 		PORTA = _BV(1);
 	}
 }
