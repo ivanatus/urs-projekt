@@ -47,11 +47,11 @@ void displayOLED(uint16_t adc) {
 		//crtanje grafova 
 		if (adc < 45){
 			OLED_VerticalGraph(0, 0);
-		} else if(adc >= 45 && adc < 48){
+		} else if(adc >= 45 && adc < 47){
 			OLED_VerticalGraph(0, 25);
-		} else if(adc >= 48 && adc < 51){
+		} else if(adc >= 47 && adc < 50){
 			OLED_VerticalGraph(0, 50);
-		} else if(adc >= 51 && adc < 53){
+		} else if(adc >= 50 && adc < 52){
 			OLED_VerticalGraph(0, 75);
 		} else{
 			OLED_VerticalGraph(0, 100);
